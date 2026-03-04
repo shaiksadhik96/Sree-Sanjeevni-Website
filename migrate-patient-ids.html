@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient ID Migration Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e7efe2 0%, #93c572 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2d5016;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header .emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-left: 4px solid #7eab76;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        .info-box h3 {
+            color: #2d5016;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .info-box p {
+            color: #4a5d3f;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .step {
+            background: #fafafa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .step-number {
+            display: inline-block;
+            background: #7eab76;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .step h4 {
+            color: #333;
+            margin-bottom: 8px;
+            display: inline;
+        }
+        .step p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+            margin-left: 38px;
+        }
+        .code-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            overflow-x: auto;
+            margin-left: 38px;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+            background: #7eab76;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(126, 171, 118, 0.3);
+        }
+        button:hover {
+            background: #6a9564;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(126, 171, 118, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        #result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        #result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #7eab76;
+        }
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+            margin-left: 38px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Patient ID Migration Tool</h1>
+            <p style="color: #666;">Sree Sanjeevni Ayurvedic Clinic</p>
+        </div>
+
+        <div class="info-box">
+            <h3>What does this do?</h3>
+            <p>This tool adds unique 4-character Patient IDs to all existing patients in your system. New patients will automatically get IDs when registered.</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <h4>Get Your Authentication Token</h4>
+            <p>Login to your application as <strong>Admin</strong> or <strong>Receptionist</strong></p>
+            <p>Open browser console (Press <strong>F12</strong>), go to <strong>Console</strong> tab, and run:</p>
+            <div class="code-box">localStorage.getItem("token")</div>
+            <p>Copy the token value (without quotes)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <h4>Enter Your Token</h4>
+            <label for="tokenInput">Paste your JWT token here:</label>
+            <input type="text" id="tokenInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <h4>Run Migration</h4>
+            <p>Click the button below to automatically assign Patient IDs to all existing customers</p>
+        </div>
+
+        <div class="btn-container">
+            <button onclick="runMigration()" id="migrateBtn">
+                🚀 Migrate Patient IDs
+            </button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function runMigration() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            const btn = document.getElementById('migrateBtn');
+
+            if (!token) {
+                resultDiv.className = 'error';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = 'Please enter your authentication token first!';
+                return;
+            }
+
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Migrating...';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:5000/api/customers/migrate-ids', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `
+                        <strong>Migration Completed Successfully!</strong><br><br>
+                        <strong>Results:</strong><br>
+                        • Total customers processed: ${data.total}<br>
+                        • Successfully updated: ${data.updated}<br>
+                        • Failed: ${data.failed}<br><br>
+                        All existing customers now have unique Patient IDs!<br>
+                        Refresh your application to see the changes.
+                    `;
+                } else {
+                    throw new Error(data.message || 'Migration failed');
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <strong>Migration Failed</strong><br><br>
+                    ${error.message}<br><br>
+                    <strong>Common issues:</strong><br>
+                    • Invalid or expired token<br>
+                    • Backend server not running on port 5000<br>
+                    • Network connection issues
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🚀 Migrate Patient IDs';
+            }
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('tokenInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                runMigration();
+            }
+        });
+    </script>
+</body>
+</html>
