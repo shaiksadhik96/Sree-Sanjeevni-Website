@@ -197,7 +197,7 @@ const DiscountsPage = () => {
                             </svg>
                             <p className="text-gray-500 text-sm font-medium">No discount offers {filter !== 'all' ? `with status "${filter}"` : 'yet'}</p>
                             {filter === 'pending' && user?.role === 'receptionist' && (
-                                <p className="text-gray-400 text-xs mt-2">👉 Go to <span className="font-semibold">Patients</span> page to create discount offers for your customers</p>
+                                <p className="text-gray-400 text-xs mt-2">Go to <span className="font-semibold">Patients</span> page to create discount offers for your customers</p>
                             )}
                             {filter === 'pending' && user?.role === 'admin' && (
                                 <p className="text-gray-400 text-xs mt-2">Receptionists will send discount offers here for your approval</p>
@@ -270,13 +270,13 @@ const DiscountsPage = () => {
                                         onClick={() => handleApprove(selectedDiscount.id)}
                                         className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded transition"
                                     >
-                                        ✓ Approve
+                                        Approve
                                     </button>
                                     <button
                                         onClick={() => handleReject(selectedDiscount.id)}
                                         className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded transition"
                                     >
-                                        ✕ Reject
+                                        Reject
                                     </button>
                                 </>
                             )}

@@ -652,7 +652,7 @@ const ReceptionOverview = () => {
                             transition={{ delay: 0.65 }}
                             className="flex items-start gap-2 p-3 bg-white rounded-lg"
                         >
-                            <span className="text-blue-600 font-bold text-lg">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
                             <span>Greet every patient with a warm smile and personalized welcome</span>
                         </motion.li>
                         <motion.li
@@ -661,7 +661,7 @@ const ReceptionOverview = () => {
                             transition={{ delay: 0.7 }}
                             className="flex items-start gap-2 p-3 bg-white rounded-lg"
                         >
-                            <span className="text-blue-600 font-bold text-lg">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
                             <span>Verify patient information and collect complete details during registration</span>
                         </motion.li>
                         <motion.li
@@ -670,7 +670,7 @@ const ReceptionOverview = () => {
                             transition={{ delay: 0.75 }}
                             className="flex items-start gap-2 p-3 bg-white rounded-lg"
                         >
-                            <span className="text-blue-600 font-bold text-lg">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
                             <span>Schedule appointments strategically to avoid overcrowding</span>
                         </motion.li>
                         <motion.li
@@ -679,7 +679,7 @@ const ReceptionOverview = () => {
                             transition={{ delay: 0.8 }}
                             className="flex items-start gap-2 p-3 bg-white rounded-lg"
                         >
-                            <span className="text-blue-600 font-bold text-lg">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
                             <span>Follow up with patients about their appointment confirmations</span>
                         </motion.li>
                         <motion.li
@@ -688,7 +688,7 @@ const ReceptionOverview = () => {
                             transition={{ delay: 0.85 }}
                             className="flex items-start gap-2 p-3 bg-white rounded-lg"
                         >
-                            <span className="text-blue-600 font-bold text-lg">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
                             <span>Keep the reception area clean, organized, and welcoming</span>
                         </motion.li>
                     </ul>

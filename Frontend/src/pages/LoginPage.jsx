@@ -111,15 +111,15 @@ const LoginPage = () => {
             className="flex gap-4 items-center text-xs text-gray-500"
           >
             <div className="flex items-center gap-2">
-              <span className="text-green-600">✓</span>
+              <span className="h-2 w-2 rounded-full bg-green-600"></span>
               <span>Easy Booking</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-green-600">✓</span>
+              <span className="h-2 w-2 rounded-full bg-green-600"></span>
               <span>Patient Management</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-green-600">✓</span>
+              <span className="h-2 w-2 rounded-full bg-green-600"></span>
               <span>Reports</span>
             </div>
           </motion.div>
@@ -199,7 +199,7 @@ const LoginPage = () => {
             type="submit"
             className="w-full rounded-xl bg-gradient-to-r from-herbal-600 to-herbal-700 px-5 py-3 text-sm font-bold text-white transition-all hover:shadow-glow-lg shadow-soft"
           >
-            {isLogin ? "✓ Sign In" : "✓ Sign Up"}
+            {isLogin ? "Sign In" : "Sign Up"}
           </motion.button>
 
           <p className="text-center text-xs text-gray-500">

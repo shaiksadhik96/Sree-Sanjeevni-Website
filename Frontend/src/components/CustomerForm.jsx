@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { AYURVEDIC_SERVICES, getServicePrice } from "../utils/services";
 
 const emptyValues = {
   name: "",
@@ -66,7 +67,17 @@ const CustomerForm = ({
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setValues((prev) => ({ ...prev, [name]: value }));
+    setValues((prev) => {
+      const updated = { ...prev, [name]: value };
+      // Auto-fill service cost when therapy type is selected
+      if (name === 'therapyType' && value) {
+        const servicePrice = getServicePrice(value);
+        if (servicePrice > 0) {
+          updated.serviceCost = servicePrice;
+        }
+      }
+      return updated;
+    });
   };
 
   const handleSubmit = (event) => {
@@ -208,15 +219,12 @@ const CustomerForm = ({
               onChange={handleChange}
               className="mt-2 w-full rounded-xl border border-brand-100 bg-white px-4 py-2 text-sm focus:border-brand-400 focus:outline-none"
             >
-              <option value="">-- Select Therapy --</option>
-              <option value="Abhyanga">Abhyanga (Full Body Massage)</option>
-              <option value="Shirodhara">Shirodhara (Third Eye Therapy)</option>
-              <option value="Pizhichil">Pizhichil (Oil Bath Therapy)</option>
-              <option value="Navarakizhi">Navarakizhi (Rice Bolus Massage)</option>
-              <option value="Udwarthanam">Udwarthanam (Powder Massage)</option>
-              <option value="Kati Basti">Kati Basti (Lower Back Treatment)</option>
-              <option value="Netra Tarpana">Netra Tarpana (Eye Rejuvenation)</option>
-              <option value="Nasya">Nasya (Nasal Therapy)</option>
+              <option value="">-- Select Service --</option>
+              {AYURVEDIC_SERVICES.map(service => (
+                <option key={service.id} value={service.name}>
+                  {service.name} - ₹{service.price} ({service.duration})
+                </option>
+              ))}
             </select>
           </label>
           <label className="text-sm font-semibold text-brand-700">

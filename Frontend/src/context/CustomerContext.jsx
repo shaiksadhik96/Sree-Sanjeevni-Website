@@ -18,13 +18,13 @@ export const CustomerProvider = ({ children }) => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(`[FETCH CUSTOMERS] ✓ Fetched ${data.length} customers`);
+        console.log(`[FETCH CUSTOMERS] SUCCESS: Fetched ${data.length} customers`);
         setCustomers(data.map((c) => ({ ...c, id: c._id })));
       } else {
-        console.error('[FETCH CUSTOMERS] ✗ Failed to fetch:', data.message);
+        console.error('[FETCH CUSTOMERS] ERROR: Failed to fetch:', data.message);
       }
     } catch (err) {
-      console.error("[FETCH CUSTOMERS] ✗ Error:", err);
+      console.error("[FETCH CUSTOMERS] ERROR:", err);
     }
   }, [token]);
 
@@ -49,15 +49,15 @@ export const CustomerProvider = ({ children }) => {
       const data = await response.json();
       if (response.ok) {
         const newCustomer = { ...data, id: data._id };
-        console.log(`[ADD CUSTOMER] ✓ Customer added successfully with ID: ${newCustomer.id}`);
+        console.log(`[ADD CUSTOMER] SUCCESS: Customer added with ID: ${newCustomer.id}`);
         setCustomers((prev) => [newCustomer, ...prev]);
         return newCustomer;
       } else {
-        console.error('[ADD CUSTOMER] ✗ Failed to add customer:', data.message);
+        console.error('[ADD CUSTOMER] ERROR: Failed to add customer:', data.message);
         return null;
       }
     } catch (err) {
-      console.error("[ADD CUSTOMER] ✗ Error:", err);
+      console.error("[ADD CUSTOMER] ERROR:", err);
       return null;
     }
   }, [token]);

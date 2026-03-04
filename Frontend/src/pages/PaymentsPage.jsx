@@ -5,6 +5,7 @@ import { useCustomers } from '../context/CustomerContext';
 import { useToast } from '../components/ToastProvider';
 import { validatePayment, getCorrectPaymentStatus } from '../utils/paymentValidator';
 import PaymentReceipt from '../components/PaymentReceipt';
+import { AYURVEDIC_SERVICES, PAYMENT_METHODS, getServicePrice } from '../utils/services';
 
 const PaymentsPage = () => {
     const { payments, createPayment, updatePayment, fetchPayments } = usePayments();
@@ -48,6 +49,16 @@ const PaymentsPage = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleServiceChange = (e) => {
+        const serviceName = e.target.value;
+        const servicePrice = getServicePrice(serviceName);
+        setForm(prev => ({
+            ...prev,
+            serviceType: serviceName,
+            amount: servicePrice > 0 ? servicePrice : prev.amount
+        }));
     };
 
     const handleCustomerChange = (e) => {
@@ -170,7 +181,7 @@ const PaymentsPage = () => {
                     onClick={() => setShowForm(!showForm)}
                     className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark transition font-semibold text-sm"
                 >
-                    {showForm ? '✕ Cancel' : '+ Add Payment'}
+                    {showForm ? 'Cancel' : '+ Add Payment'}
                 </button>
             </div>
 
@@ -277,12 +288,9 @@ const PaymentsPage = () => {
                                 onChange={handleChange}
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-300 focus:border-brand"
                             >
-                                <option value="Cash">Cash</option>
-                                <option value="UPI">UPI</option>
-                                <option value="Card">Card</option>
-                                <option value="Net Banking">Net Banking</option>
-                                <option value="Cheque">Cheque</option>
-                                <option value="Other">Other</option>
+                                {PAYMENT_METHODS.map(method => (
+                                    <option key={method} value={method}>{method}</option>
+                                ))}
                             </select>
                         </div>
                         <div>
@@ -300,14 +308,19 @@ const PaymentsPage = () => {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
-                            <input
-                                type="text"
+                            <select
                                 name="serviceType"
                                 value={form.serviceType}
-                                onChange={handleChange}
-                                placeholder="e.g., Abhyanga"
+                                onChange={handleServiceChange}
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-300 focus:border-brand"
-                            />
+                            >
+                                <option value="">-- Select Service --</option>
+                                {AYURVEDIC_SERVICES.map(service => (
+                                    <option key={service.id} value={service.name}>
+                                        {service.name} - ₹{service.price}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Payment Date</label>

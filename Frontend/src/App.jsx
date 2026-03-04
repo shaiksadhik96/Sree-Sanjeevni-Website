@@ -6,7 +6,9 @@ import ReceptionDashboard from "./pages/ReceptionDashboard.jsx";
 import ReceptionOverview from "./pages/ReceptionOverview.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import PatientsPage from "./pages/PatientsPage.jsx";
+import FinancialDashboard from "./pages/FinancialDashboard.jsx";
 import BillingPage from "./pages/BillingPage.jsx";
+import PaymentsPage from "./pages/PaymentsPage.jsx";
 import ReportsPage from "./pages/ReportsPage.jsx";
 import AboutAyurvedaPage from "./pages/AboutAyurvedaPage.jsx";
 import BenefitsPage from "./pages/BenefitsPage.jsx";
@@ -14,7 +16,6 @@ import ServicesPage from "./pages/ServicesPage.jsx";
 import ServicesBilling from "./components/ServicesBilling.jsx";
 import AdminApprovalsPage from "./pages/AdminApprovalsPage.jsx";
 import ReceptionBookingsPage from "./pages/ReceptionBookingsPage.jsx";
-import PaymentsPage from "./pages/PaymentsPage.jsx";
 
 function App() {
   return (
@@ -27,8 +28,7 @@ function App() {
         <Route path="overview" element={<AdminOverview />} />
         <Route path="patients" element={<PatientsPage viewOnly={true} />} />
         <Route path="approvals" element={<AdminApprovalsPage />} />
-        <Route path="billing" element={<BillingPage />} />
-        <Route path="payments" element={<PaymentsPage />} />
+        <Route path="financial" element={<FinancialDashboard />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="about-ayurveda" element={<AboutAyurvedaPage />} />
         <Route path="benefits" element={<BenefitsPage />} />
@@ -39,6 +39,7 @@ function App() {
         <Route path="overview" element={<ReceptionOverview />} />
         <Route path="patients" element={<PatientsPage viewOnly={false} />} />
         <Route path="bookings" element={<ReceptionBookingsPage />} />
+        <Route path="billing" element={<BillingPage />} />
         <Route path="payments" element={<PaymentsPage />} />
         <Route path="about-ayurveda" element={<AboutAyurvedaPage />} />
         <Route path="benefits" element={<BenefitsPage />} />

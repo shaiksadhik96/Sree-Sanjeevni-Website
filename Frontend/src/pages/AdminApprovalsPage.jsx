@@ -129,7 +129,10 @@ const AdminApprovalsPage = () => {
                 <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-amber-200/30 blur-2xl"></div>
                 <div className="relative">
                     <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-                        <span className="text-3xl">✓</span> Pending Approvals
+                        <svg className="w-8 h-8 text-herbal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Pending Approvals
                     </h2>
                     <p className="text-sm text-gray-600 mt-1">Review and approve booking requests and discount offers</p>
                 </div>
@@ -264,7 +267,9 @@ const AdminApprovalsPage = () => {
                 ) : (
                     <div className="col-span-full text-center py-12">
                         <div className="inline-flex flex-col items-center">
-                            <span className="text-6xl mb-4 text-green-500 font-bold">✓</span>
+                            <svg className="w-16 h-16 mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                             <p className="text-gray-500 text-lg font-medium">All clear! No pending approvals.</p>
                             <p className="text-gray-400 text-sm mt-2">You're all caught up</p>
                         </div>
@@ -346,7 +351,7 @@ const AdminApprovalsPage = () => {
                                             onChange={() => setAcceptDiscount(true)}
                                             className="w-4 h-4"
                                         />
-                                        <span className="text-sm text-green-700 font-semibold">✓ Accept Discount</span>
+                                        <span className="text-sm text-green-700 font-semibold">Accept Discount</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer flex-1">
                                         <input
@@ -356,7 +361,7 @@ const AdminApprovalsPage = () => {
                                             onChange={() => setAcceptDiscount(false)}
                                             className="w-4 h-4"
                                         />
-                                        <span className="text-sm text-red-700 font-semibold">✕ Decline Discount</span>
+                                        <span className="text-sm text-red-700 font-semibold">Decline Discount</span>
                                     </label>
                                 </div>
                             </div>
@@ -396,13 +401,13 @@ const AdminApprovalsPage = () => {
                                         onClick={() => handleApproveBooking(selectedItem.id, acceptDiscount)}
                                         className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition"
                                     >
-                                        ✓ Approve {selectedItem?.discountAmount && (acceptDiscount ? 'with Discount' : 'without Discount')}
+                                        Approve {selectedItem?.discountAmount && (acceptDiscount ? 'with Discount' : 'without Discount')}
                                     </button>
                                     <button
                                         onClick={() => handlePostponeBooking(selectedItem.id)}
                                         className="flex-1 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg transition"
                                     >
-                                        ⏸ Postpone
+                                        Postpone
                                     </button>
                                 </>
                             ) : (
@@ -411,13 +416,13 @@ const AdminApprovalsPage = () => {
                                         onClick={() => handleApproveDiscount(selectedItem.id)}
                                         className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition"
                                     >
-                                        ✓ Approve
+                                        Approve
                                     </button>
                                     <button
                                         onClick={() => handleRejectDiscount(selectedItem.id)}
                                         className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition"
                                     >
-                                        ✕ Reject
+                                        Reject
                                     </button>
                                 </>
                             )}

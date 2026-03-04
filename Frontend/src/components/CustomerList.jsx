@@ -112,7 +112,10 @@ const CustomerList = ({
                         </svg>
                         {customer.phone}
                       </div>
-                      <div className="text-gray-500 text-xs mt-1">Age: {customer.age}</div>
+                      <div className="text-gray-500 text-xs mt-1 flex items-center gap-3">
+                        <span>Age: {customer.age}</span>
+                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-semibold">{customer.gender || 'N/A'}</span>
+                      </div>
                     </div>
                     <div className={`px-2 py-1 rounded text-xs font-semibold ml-auto ${statusStyles[customer.status] || statusStyles.Active}`}>
                       {customer.status || "Active"}

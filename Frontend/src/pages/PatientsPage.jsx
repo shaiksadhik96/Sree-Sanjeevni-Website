@@ -490,19 +490,19 @@ const PatientsPage = ({ viewOnly = false }) => {
                     </div>
                     <ul className="space-y-3 text-sm text-gray-700">
                         <li className="flex items-start gap-2">
-                            <span className="text-herbal-600 font-bold">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-herbal-600"></span>
                             <span>Always verify patient contact information during registration</span>
                         </li>
                         <li className="flex items-start gap-2">
-                            <span className="text-herbal-600 font-bold">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-herbal-600"></span>
                             <span>Record therapy preferences and any allergies in notes</span>
                         </li>
                         <li className="flex items-start gap-2">
-                            <span className="text-herbal-600 font-bold">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-herbal-600"></span>
                             <span>Update patient status after each visit completion</span>
                         </li>
                         <li className="flex items-start gap-2">
-                            <span className="text-herbal-600 font-bold">✓</span>
+                            <span className="mt-1 h-2 w-2 rounded-full bg-herbal-600"></span>
                             <span>Ensure discount approvals before applying to bills</span>
                         </li>
                     </ul>
