@@ -8,8 +8,8 @@ import { formatDateLabel } from '../utils/date';
 
 const AdminApprovalsPage = () => {
     const { user } = useAuth();
-    const { bookings, updateBookingStatus } = useBookings();
-    const { discounts, updateDiscountStatus, deleteDiscount } = useDiscounts();
+    const { bookings, updateBookingStatus, fetchBookings } = useBookings();
+    const { discounts, updateDiscountStatus, deleteDiscount, fetchDiscounts } = useDiscounts();
     const { showToast } = useToast();
     
     const [activeTab, setActiveTab] = useState('all');
@@ -63,6 +63,9 @@ const AdminApprovalsPage = () => {
             setSelectedItem(null);
             setAdminNote('');
             setAcceptDiscount(true);
+            // Refresh data to update notifications
+            await fetchBookings();
+            await fetchDiscounts();
         } else {
             showToast('Failed to approve booking', 'error');
         }
@@ -79,6 +82,9 @@ const AdminApprovalsPage = () => {
             setSelectedItem(null);
             setAdminNote('');
             setPostponeDate('');
+            // Refresh data to update notifications
+            await fetchBookings();
+            await fetchDiscounts();
         } else {
             showToast('Failed to postpone booking', 'error');
         }
@@ -91,6 +97,7 @@ const AdminApprovalsPage = () => {
             setSelectedItem(null);
             setAdminNote('');
             setApplyToCustomer(false);
+            await fetchDiscounts();
         } else {
             showToast('Failed to approve discount', 'error');
         }
@@ -102,6 +109,7 @@ const AdminApprovalsPage = () => {
             showToast('Discount rejected', 'success');
             setSelectedItem(null);
             setAdminNote('');
+            await fetchDiscounts();
         } else {
             showToast('Failed to reject discount', 'error');
         }

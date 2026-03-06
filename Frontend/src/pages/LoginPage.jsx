@@ -38,7 +38,7 @@ const LoginPage = () => {
       }
 
       showToast("Welcome back!", "success");
-      const nextPath = result.role === "admin" ? "/admin/overview" : "/reception/patients";
+      const nextPath = result.role === "admin" ? "/admin/overview" : "/reception/overview";
       navigate(nextPath, { replace: true });
     } else {
       if (!form.name || !form.email || !form.password || !form.confirmPassword) {

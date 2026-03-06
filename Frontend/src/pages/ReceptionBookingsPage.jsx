@@ -7,7 +7,7 @@ import { formatDateLabel } from "../utils/date.js";
 
 const ReceptionBookingsPage = () => {
   const { customers } = useCustomers();
-  const { bookings, createBooking } = useBookings();
+  const { bookings, createBooking, fetchBookings } = useBookings();
   const { showToast } = useToast();
   const [form, setForm] = useState({
     customerId: "",
@@ -72,6 +72,7 @@ const ReceptionBookingsPage = () => {
     }
 
     showToast("Booking request sent for approval.", "success");
+    await fetchBookings();
     setForm({
       customerId: "",
       patientName: "",

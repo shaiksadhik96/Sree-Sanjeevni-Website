@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCustomers } from '../context/CustomerContext';
 import { useAuth } from '../context/AuthContext';
 import StatCard from '../components/StatCard';
+import DashboardNotification from '../components/DashboardNotification';
 
 const ReceptionOverview = () => {
     const { customers, fetchCustomers } = useCustomers();
@@ -29,7 +30,6 @@ const ReceptionOverview = () => {
     const handleAddPatient = () => navigate('/reception/patients');
     const handleCreateBooking = () => navigate('/reception/bookings');
     const handleOfferDiscount = () => navigate('/reception/discounts');
-    const handleViewReports = () => navigate('/reception/reports');
 
     // Calculate statistics
     const stats = useMemo(() => {
@@ -186,6 +186,9 @@ const ReceptionOverview = () => {
                     </motion.div>
                 </div>
             </motion.div>
+
+            {/* Dashboard Notifications */}
+            <DashboardNotification userRole="receptionist" />
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -439,19 +442,6 @@ const ReceptionOverview = () => {
                                     </svg>
                                 </div>
                                 <span className="text-sm font-semibold text-gray-700">Offer Discount</span>
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.03, x: 5 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={handleViewReports}
-                                className="w-full text-left bg-white hover:bg-purple-50 border border-purple-200 rounded-xl p-3 transition-all flex items-center gap-3 group cursor-pointer"
-                            >
-                                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                </div>
-                                <span className="text-sm font-semibold text-gray-700">View Reports</span>
                             </motion.button>
                         </div>
                     </motion.div>

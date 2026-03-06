@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useCustomers } from '../context/CustomerContext';
 import { useBookings } from '../context/BookingContext';
 import { usePayments } from '../context/PaymentContext';
@@ -70,6 +71,56 @@ const FinancialDashboard = () => {
             collectionRate: totalBilled > 0 ? ((totalPaid / totalBilled) * 100).toFixed(1) : 0
         };
     }, [billingData, payments]);
+
+    // Chart data: Payment Status Distribution
+    const paymentStatusData = useMemo(() => {
+        return [
+            { name: 'Paid', value: stats.paid, color: '#10b981' },
+            { name: 'Pending', value: stats.pending, color: '#f59e0b' },
+        ].filter(item => item.value > 0);
+    }, [stats]);
+
+    // Chart data: Service Revenue
+    const serviceRevenueData = useMemo(() => {
+        const serviceMap = {};
+        billingData.forEach(bill => {
+            const service = bill.serviceType || 'General';
+            serviceMap[service] = (serviceMap[service] || 0) + bill.finalAmount;
+        });
+        return Object.entries(serviceMap).map(([name, value]) => ({
+            name,
+            value
+        })).sort((a, b) => b.value - a.value).slice(0, 6);
+    }, [billingData]);
+
+    // Chart data: Payment Method Distribution
+    const paymentMethodData = useMemo(() => {
+        const methodMap = {};
+        payments.forEach(p => {
+            const method = p.paymentMethod || 'Not Specified';
+            methodMap[method] = (methodMap[method] || 0) + (p.amountPaid || 0);
+        });
+        const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+        return Object.entries(methodMap).map(([name, value], idx) => ({
+            name,
+            value,
+            color: colors[idx % colors.length]
+        }));
+    }, [payments]);
+
+    // Chart data: Monthly revenue trend
+    const monthlyRevenueData = useMemo(() => {
+        const monthMap = {};
+        payments.forEach(p => {
+            const date = new Date(p.paymentDate || new Date());
+            const monthKey = `${date.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' })}`;
+            monthMap[monthKey] = (monthMap[monthKey] || 0) + (p.amountPaid || 0);
+        });
+        return Object.entries(monthMap).map(([month, revenue]) => ({
+            month,
+            revenue
+        }));
+    }, [payments]);
 
     const formatCurrency = (value) => `₹${(value || 0).toLocaleString('en-IN')}`;
     const formatDate = (date) => new Date(date).toLocaleDateString('en-IN');
@@ -228,82 +279,220 @@ const FinancialDashboard = () => {
 
             {/* Tab Content */}
             {activeTab === 'overview' && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Payment Summary */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="lg:col-span-2 bg-white rounded-xl p-6 shadow-soft border border-gray-200"
-                    >
-                        <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <svg className="w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-                            </svg>
-                            Quick Summary
-                        </h3>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg border border-blue-100">
-                                <div>
-                                    <p className="text-sm text-gray-600">Paid Payments</p>
-                                    <p className="text-2xl font-bold text-blue-700">{stats.paid}</p>
+                <div className="space-y-6">
+                    {/* Summary Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Payment Summary */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="lg:col-span-2 bg-white rounded-xl p-6 shadow-soft border border-gray-200"
+                        >
+                            <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                                </svg>
+                                Quick Summary
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                    <div>
+                                        <p className="text-sm text-gray-600">Paid Payments</p>
+                                        <p className="text-2xl font-bold text-blue-700">{stats.paid}</p>
+                                    </div>
+                                    <span className="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded">PAID</span>
                                 </div>
-                                <span className="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded">PAID</span>
-                            </div>
-                            <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-100">
-                                <div>
-                                    <p className="text-sm text-gray-600">Pending Payments</p>
-                                    <p className="text-2xl font-bold text-amber-700">{stats.pending}</p>
+                                <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-100">
+                                    <div>
+                                        <p className="text-sm text-gray-600">Pending Payments</p>
+                                        <p className="text-2xl font-bold text-amber-700">{stats.pending}</p>
+                                    </div>
+                                    <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded">PENDING</span>
                                 </div>
-                                <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded">PENDING</span>
-                            </div>
-                            <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border border-green-100">
-                                <div>
-                                    <p className="text-sm text-gray-600">Total Bills Created</p>
-                                    <p className="text-2xl font-bold text-green-700">{billingData.length}</p>
+                                <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border border-green-100">
+                                    <div>
+                                        <p className="text-sm text-gray-600">Total Bills Created</p>
+                                        <p className="text-2xl font-bold text-green-700">{billingData.length}</p>
+                                    </div>
+                                    <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded">BILLS</span>
                                 </div>
-                                <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded">BILLS</span>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
 
-                    {/* Key Metrics */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-gradient-to-br from-herbal-50 to-green-50 rounded-xl p-6 shadow-soft border border-herbal-200"
-                    >
-                        <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            Key Metrics
-                        </h3>
-                        <div className="space-y-4 text-sm">
-                            <div className="p-3 bg-white rounded-lg border-l-4 border-green-500">
-                                <p className="text-gray-600 text-xs">Average Bill Value</p>
-                                <p className="text-xl font-bold text-green-700 mt-1">
-                                    {billingData.length > 0 
-                                        ? formatCurrency(stats.totalBilled / billingData.length)
-                                        : '₹0'
-                                    }
-                                </p>
+                        {/* Key Metrics */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className="bg-gradient-to-br from-herbal-50 to-green-50 rounded-xl p-6 shadow-soft border border-herbal-200"
+                        >
+                            <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                Key Metrics
+                            </h3>
+                            <div className="space-y-4 text-sm">
+                                <div className="p-3 bg-white rounded-lg border-l-4 border-green-500">
+                                    <p className="text-gray-600 text-xs">Average Bill Value</p>
+                                    <p className="text-xl font-bold text-green-700 mt-1">
+                                        {billingData.length > 0 
+                                            ? formatCurrency(stats.totalBilled / billingData.length)
+                                            : '₹0'
+                                        }
+                                    </p>
+                                </div>
+                                <div className="p-3 bg-white rounded-lg border-l-4 border-blue-500">
+                                    <p className="text-gray-600 text-xs">Outstanding Balance</p>
+                                    <p className="text-xl font-bold text-blue-700 mt-1">{formatCurrency(stats.pendingAmount)}</p>
+                                </div>
+                                <div className="p-3 bg-white rounded-lg border-l-4 border-purple-500">
+                                    <p className="text-gray-600 text-xs">Avg Discount Given</p>
+                                    <p className="text-xl font-bold text-purple-700 mt-1">
+                                        {billingData.length > 0 
+                                            ? formatCurrency(stats.totalDiscounts / billingData.length)
+                                            : '₹0'
+                                        }
+                                    </p>
+                                </div>
                             </div>
-                            <div className="p-3 bg-white rounded-lg border-l-4 border-blue-500">
-                                <p className="text-gray-600 text-xs">Outstanding Balance</p>
-                                <p className="text-xl font-bold text-blue-700 mt-1">{formatCurrency(stats.pendingAmount)}</p>
-                            </div>
-                            <div className="p-3 bg-white rounded-lg border-l-4 border-purple-500">
-                                <p className="text-gray-600 text-xs">Avg Discount Given</p>
-                                <p className="text-xl font-bold text-purple-700 mt-1">
-                                    {billingData.length > 0 
-                                        ? formatCurrency(stats.totalDiscounts / billingData.length)
-                                        : '₹0'
-                                    }
-                                </p>
-                            </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </div>
+
+                    {/* Charts Section */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Payment Status Pie Chart */}
+                        {paymentStatusData.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="bg-white rounded-xl p-6 shadow-soft border border-gray-200"
+                        >
+                            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                Payment Status Distribution
+                            </h3>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart>
+                                    <Pie
+                                        data={paymentStatusData}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={true}
+                                        label={({ name, value }) => `${name}: ${value}`}
+                                        outerRadius={100}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {paymentStatusData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip formatter={(value) => `${value} payments`} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </motion.div>
+                    )}
+
+                    {/* Service Revenue Bar Chart */}
+                    {serviceRevenueData.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.25 }}
+                            className="bg-white rounded-xl p-6 shadow-soft border border-gray-200"
+                        >
+                            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                Revenue by Service
+                            </h3>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <BarChart data={serviceRevenueData} margin={{ top: 20, right: 30, left: 0, bottom: 60 }}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} tick={{ fontSize: 12 }} />
+                                    <YAxis />
+                                    <Tooltip formatter={(value) => `₹${value.toLocaleString('en-IN')}`} />
+                                    <Bar dataKey="value" fill="#10b981" radius={[8, 8, 0, 0]} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </motion.div>
+                    )}
+
+                    {/* Payment Method Distribution */}
+                    {paymentMethodData.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="bg-white rounded-xl p-6 shadow-soft border border-gray-200"
+                        >
+                            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                Payment Methods
+                            </h3>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart>
+                                    <Pie
+                                        data={paymentMethodData}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={true}
+                                        label={({ name, value }) => `${name}: ₹${value.toLocaleString('en-IN')}`}
+                                        outerRadius={100}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {paymentMethodData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip formatter={(value) => `₹${value.toLocaleString('en-IN')}`} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </motion.div>
+                    )}
+
+                    {/* Monthly Revenue Trend */}
+                    {monthlyRevenueData.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.35 }}
+                            className="bg-white rounded-xl p-6 shadow-soft border border-gray-200"
+                        >
+                            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12a1 1 0 100-2 1 1 0 000 2z" />
+                                </svg>
+                                Revenue Trend
+                            </h3>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <LineChart data={monthlyRevenueData} margin={{ top: 5, right: 30, left: 0, bottom: 20 }}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis />
+                                    <Tooltip formatter={(value) => `₹${value.toLocaleString('en-IN')}`} />
+                                    <Legend />
+                                    <Line 
+                                        type="monotone" 
+                                        dataKey="revenue" 
+                                        stroke="#6366f1" 
+                                        dot={{ fill: '#6366f1', r: 5 }}
+                                        activeDot={{ r: 7 }}
+                                        strokeWidth={2}
+                                    />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </motion.div>
+                    )}
+                    </div>
                 </div>
             )}
 

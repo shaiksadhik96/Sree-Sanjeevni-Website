@@ -9,7 +9,7 @@ import { useToast } from '../components/ToastProvider';
 
 const PatientsPage = ({ viewOnly = false }) => {
     const { customers, fetchCustomers, addCustomer, updateCustomer, deleteCustomer } = useCustomers();
-    const { createDiscount } = useDiscounts();
+    const { createDiscount, fetchDiscounts } = useDiscounts();
     const { user } = useAuth();
     const { showToast } = useToast();
     const [showForm, setShowForm] = useState(false);
@@ -99,6 +99,7 @@ const PatientsPage = ({ viewOnly = false }) => {
                     const discountResult = await createDiscount(discountPayload);
                     if (discountResult) {
                         showToast("Patient added. Discount sent to admin for approval.", "success");
+                        await fetchDiscounts();
                     } else {
                         showToast("Patient added, but discount request failed.", "warning");
                     }
@@ -144,6 +145,7 @@ const PatientsPage = ({ viewOnly = false }) => {
         const result = await createDiscount(payload);
         if (result) {
             showToast('Discount offer sent to admin for approval', 'success');
+            await fetchDiscounts();
             setShowDiscountModal(false);
             setDiscountCustomer(null);
             setDiscountForm({
