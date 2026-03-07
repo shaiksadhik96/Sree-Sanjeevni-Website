@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -7,7 +7,7 @@ import Logo from "../components/Logo.jsx";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { user, login, signup, logout } = useAuth();
+  const { user, login, signup, isInitialized } = useAuth();
   const { showToast } = useToast();
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({
@@ -16,6 +16,14 @@ const LoginPage = () => {
     password: "",
     confirmPassword: "",
   });
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isInitialized && user) {
+      const nextPath = user.role === "admin" ? "/admin/overview" : "/reception/overview";
+      navigate(nextPath, { replace: true });
+    }
+  }, [user, isInitialized, navigate]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
