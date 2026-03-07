@@ -2,7 +2,12 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const ProtectedRoute = ({ role, children }) => {
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
+
+  // Wait for auth to initialize from localStorage
+  if (!isInitialized) {
+    return null; // or a loading spinner
+  }
 
   if (!user) {
     return <Navigate to="/login" replace />;
